@@ -113,9 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
         presenceTefilines: absenceComplete ? texteAbsence : formData.get("presenceTefilines") || "",
         adultesTefilines: !absenceComplete && formData.get("presenceTefilines") ? formData.get("adultesTefilines") || "0" : "",
         enfantsTefilines: !absenceComplete && formData.get("presenceTefilines") ? formData.get("enfantsTefilines") || "0" : "",
-        presenceChabbat: "",
-        adultesChabbat: "",
-        enfantsChabbat: "",
+        presenceChabbat: absenceComplete ? texteAbsence : formData.get("presenceChabbat") || "",
+        adultesChabbat: !absenceComplete && formData.get("presenceChabbat") ? formData.get("adultesChabbat") || "0" : "",
+        enfantsChabbat: !absenceComplete && formData.get("presenceChabbat") ? formData.get("enfantsChabbat") || "0" : "",
         presenceSoiree: absenceComplete ? texteAbsence : formData.get("presenceSoiree") || "",
         adultesSoiree: !absenceComplete && formData.get("presenceSoiree") ? formData.get("adultesSoiree") || "0" : "",
         enfantsSoiree: !absenceComplete && formData.get("presenceSoiree") ? formData.get("enfantsSoiree") || "0" : "",
@@ -179,11 +179,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function startMusic() {
     if (!music) return;
-    musicHasStarted = true;
-    playMusic();
-  }
 
-  function playMusic() {
+    if (!musicHasStarted) {
+      try {
+        music.currentTime = 18;
+      } catch (error) {
+        /* Le navigateur appliquera le départ dès que l'audio sera prêt. */
+      }
+      musicHasStarted = true;
+    }
+
     const playPromise = music.play();
 
     if (playPromise && typeof playPromise.catch === "function") {
