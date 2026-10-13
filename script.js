@@ -113,9 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
         presenceTefilines: absenceComplete ? texteAbsence : formData.get("presenceTefilines") || "",
         adultesTefilines: !absenceComplete && formData.get("presenceTefilines") ? formData.get("adultesTefilines") || "0" : "",
         enfantsTefilines: !absenceComplete && formData.get("presenceTefilines") ? formData.get("enfantsTefilines") || "0" : "",
-        presenceChabbat: "",
-        adultesChabbat: "",
-        enfantsChabbat: "",
+        presenceChabbat: absenceComplete ? texteAbsence : formData.get("presenceChabbat") || "",
+        adultesChabbat: !absenceComplete && formData.get("presenceChabbat") ? formData.get("adultesChabbat") || "0" : "",
+        enfantsChabbat: !absenceComplete && formData.get("presenceChabbat") ? formData.get("enfantsChabbat") || "0" : "",
         presenceSoiree: absenceComplete ? texteAbsence : formData.get("presenceSoiree") || "",
         adultesSoiree: !absenceComplete && formData.get("presenceSoiree") ? formData.get("adultesSoiree") || "0" : "",
         enfantsSoiree: !absenceComplete && formData.get("presenceSoiree") ? formData.get("enfantsSoiree") || "0" : "",
@@ -181,14 +181,37 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!music) return;
 
     if (!musicHasStarted) {
-      try {
-        music.currentTime = 279;
-      } catch (error) {
-        /* Le navigateur appliquera le départ dès que l'audio sera prêt. */
-      }
       musicHasStarted = true;
+
+      const seekToThreeMinutes = function () {
+        const restoreSound = function () {
+          music.muted = false;
+        };
+
+        music.currentTime = 180;
+
+        if (music.seeking) {
+          music.addEventListener("seeked", restoreSound, { once: true });
+        } else {
+          restoreSound();
+        }
+      };
+
+      if (music.readyState >= 1) {
+        seekToThreeMinutes();
+        playMusic();
+      } else {
+        music.muted = true;
+        music.addEventListener("loadedmetadata", seekToThreeMinutes, { once: true });
+        playMusic();
+      }
+      return;
     }
 
+    playMusic();
+  }
+
+  function playMusic() {
     const playPromise = music.play();
 
     if (playPromise && typeof playPromise.catch === "function") {
