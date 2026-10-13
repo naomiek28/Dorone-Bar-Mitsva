@@ -629,10 +629,6 @@ body.motion-ready .paper.visible .hebrew-name span {
   .memorial-card { width: 100%; }
   .memorial-photo,
   .memorial-letter { min-height: 820px; }
-  .memorial-photo > img {
-    object-position: center top;
-    transform: none;
-  }
   .memorial-letter {
     padding: 34px 22px;
     font-size: 14px;
@@ -1269,31 +1265,13 @@ body.invitation-open footer{position:relative;z-index:2}
   animation: hebrewLetterWrite .46s cubic-bezier(.22, 1, .36, 1) var(--letter-delay) forwards !important;
 }
 
-/* Téléphone : photo entière et apparition stable, sans animations concurrentes. */
+/* Seulement sur téléphone : photo légèrement dézoomée et animation stable. */
 @media (max-width: 600px) {
-  .memorial-card {
-    padding: 8px !important;
-    background: #080705 !important;
-    border: 1px solid rgba(231, 193, 103, .5) !important;
-  }
-
-  .memorial-photo {
-    background: #080705 !important;
-    border: 1px solid rgba(231, 193, 103, .32) !important;
-  }
-
   .memorial-photo > img {
-    inset: 8px !important;
-    width: calc(100% - 16px) !important;
-    height: calc(100% - 16px) !important;
-    object-fit: contain !important;
+    object-fit: cover !important;
     object-position: center top !important;
-    transform: none !important;
-    background: #080705;
-  }
-
-  .memorial-overlay {
-    inset: 8px !important;
+    transform: translateY(-1%) scale(.88) !important;
+    transform-origin: center top !important;
   }
 
   body.motion-ready .reveal {
